@@ -1,0 +1,5 @@
+{
+  "$comment": "League and provider ids from onde-passa's default config (src/config/default.json). Team leagues only: feed v1 has no race or tennis entries. Update when the default config changes.",
+  "leagues": ["brasileirao", "libertadores", "champions", "premier-league", "la-liga", "serie-a", "nba", "nfl"],
+  "providers": ["globo", "sportv", "premiere", "record", "cazetv", "prime", "espn", "tnt", "paramount", "f1tv", "leaguepass", "gamepass"]
+}

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/its-clouds/onde-passa-data/schemas/broadcast-feed.v1.json",
+  "title": "Onde Passa broadcast feed, version 1",
+  "description": "Confirmed broadcasters for team games. Instances import it and export their own confirmations in the same shape. Keep in sync with src/lib/broadcast-feed/format.ts.",
+  "type": "object",
+  "required": ["version", "generatedAt", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": 1 },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the file was written. ISO 8601 with an offset (Z is fine)."
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{1,40}$"
+    },
+    "entry": {
+      "type": "object",
+      "required": ["league", "startsAt", "home", "away", "providers"],
+      "additionalProperties": false,
+      "properties": {
+        "league": {
+          "$ref": "#/$defs/slug",
+          "description": "League id. The default config's ids are the shared vocabulary."
+        },
+        "startsAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Kickoff, with an offset."
+        },
+        "home": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Home team name as the source shows it. Matched loosely."
+        },
+        "away": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Away team name as the source shows it. Matched loosely."
+        },
+        "providers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": { "$ref": "#/$defs/slug" },
+          "description": "Provider ids from the config, such as globo or premiere."
+        },
+        "source": {
+          "type": "object",
+          "required": ["adapter", "eventId"],
+          "additionalProperties": false,
+          "description": "Optional hint: the exporting instance's source and event id. Used as an exact match only by instances whose league uses the same adapter.",
+          "properties": {
+            "adapter": { "type": "string", "minLength": 1, "maxLength": 40 },
+            "eventId": { "type": "string", "minLength": 1, "maxLength": 40 }
+          }
+        }
+      }
+    }
+  }
+}
